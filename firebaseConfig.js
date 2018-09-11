@@ -36,7 +36,7 @@ const postsCollection    = db.collection('posts')
 const commentsCollection = db.collection('comments')
 const likesCollection    = db.collection('likes')
 
-export {
+export const fbconfig = {
     db,
     auth,
     currentUser,
