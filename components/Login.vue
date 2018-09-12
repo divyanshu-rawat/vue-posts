@@ -16,7 +16,7 @@
                     <label for="password">Password</label>
                     <input v-model.trim = "loginForm.password" type="password" placeholder="******" id="password" />
 
-                    <button class="button">Log In</button>
+                    <button @click = "login" class="button">Log In</button>
 
                     <div class="extras">
                         <a>Forgot Password</a>
@@ -41,6 +41,20 @@
     				password:''
     			}
     		}
+    	},
+    	methods: {
+
+    		login() {
+			    fb.auth.signInWithEmailAndPassword(this.loginForm.email, this.loginForm.password)
+			    .then(user => {
+			        this.$store.commit('setCurrentUser', user.user)
+			        this.$store.dispatch('fetchUserProfile')
+			        this.$router.push('/dashboard')
+			    }).catch(err => {
+			        console.log(err)
+			    })
+			},
+
     	}
     
     }
