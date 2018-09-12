@@ -1,13 +1,23 @@
 <template>
   <div id="app">
-        <!-- <router-view> -->
-        <div>hey</div>
+      <Navigation v-if="currentUser"></Navigation>
+      <router-view/>
   </div>
 </template>
 
 <script>
+  
+import Navigation from './components/Navigation.vue'
+import { mapState } from 'vuex'
 
 export default {
+   components: { Navigation },
+   computed: {
+            ...mapState(['currentUser'])
+   },
+   updated(){
+    console.log('Current User',this.$store.state.currentUser);
+   }
   
 }
 </script>
@@ -17,7 +27,6 @@ export default {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  text-align: center;
   color: #2c3e50;
   margin-top: 60px;
 }

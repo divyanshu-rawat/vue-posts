@@ -1,7 +1,6 @@
 
 <template>
     <div id="login">
-
     	<transition name="fade">
             <div v-if="performingRequest" class="loading">
                 <p>Loading...</p>
@@ -9,27 +8,35 @@
         </transition>
 
         <section>
-            <div class="col1">
-                <h1>Hacker News</h1>
-                <p>Hacker News is a social news website focusing on computer science and entrepreneurship. </p>
-            </div>
-            <div class="col2" :class="{ 'signup-form': !showLoginForm && !showForgotPassword }">
-                <form  v-if="showLoginForm" @submit.prevent>
-                    <h1>Welcome to Hacker News</h1>
+                <div class="col-lg-12">
+                    <h1>Hacker News</h1>
+                    <p>Hacker News is a social news website focusing on computer science and entrepreneurship. </p>
+                </div>
+                <div class="col2" :class="{ 'signup-form': !showLoginForm && !showForgotPassword }">
+                <form  v-if="showLoginForm" @submit.prevent class="col-lg-4">
 
-                    <label for="email">Email</label>
-                    <input v-model.trim = "loginForm.email" type="text" placeholder="you@email.com" id="email" />
+                        <div class="form-group">
+                            <label for="email">Email</label>
+                            <input class = "form-control" v-model.trim = "loginForm.email" type="text" placeholder="you@email.com" id="email" />
+                        </div>
 
-                    <label for="password">Password</label>
-                    <input v-model.trim = "loginForm.password" type="password" placeholder="******" id="password" />
+                         <div class="form-group">
+                            <label for="password">Password</label>
+                            <input class = "form-control" v-model.trim = "loginForm.password" type="password" placeholder="******" id="password" />
+                         </div>
 
-                    <button @click = "login" class="button">Log In</button>
+                        <button @click = "login" class="btn btn-primary">Log In</button>
 
-                    <div class="extras">
-                        <a>Forgot Password</a>
-                        <a>Create An Account</a>
-                    </div>
-                </form>
+                        <div class="margin-top">
+                            <div>
+                                <a @click="togglePasswordReset" class="color">Forgot Password?</a>
+                            </div>
+                            <div>
+                                <a @click="toggleForm" class="color">Create an Account</a>
+                            </div>
+                        </div>
+
+                 </form>
 
                  <!-- Sign-up form -->
 
@@ -94,6 +101,10 @@
 
 	/* eslint-disable */ 
 	import {fbconfig} from '../firebaseConfig';
+
+    import 'bootstrap/dist/css/bootstrap.css'
+    import 'bootstrap-vue/dist/bootstrap-vue.css'
+
     export default {
 
     	data(){
@@ -125,7 +136,7 @@
     	methods: {
 
     	   login() {
-			    fb.auth.signInWithEmailAndPassword(this.loginForm.email, this.loginForm.password)
+			    fbconfig.auth.signInWithEmailAndPassword(this.loginForm.email, this.loginForm.password)
 			    .then(user => {
 			        this.$store.commit('setCurrentUser', user.user)
 			        this.$store.dispatch('fetchUserProfile')
@@ -153,7 +164,7 @@
 
               resetPassword() {
                 this.performingRequest = true
-                fb.auth.sendPasswordResetEmail(this.passwordForm.email).then(() => {
+                fbconfig.auth.sendPasswordResetEmail(this.passwordForm.email).then(() => {
                     this.performingRequest = false
                     this.passwordResetSuccess = true
                     this.passwordForm.email = ''
@@ -166,11 +177,11 @@
 
 	            signup() {
 	                this.performingRequest = true
-	                fb.auth.createUserWithEmailAndPassword(this.signupForm.email, this.signupForm.password).then(user => {
+	                fbconfig.auth.createUserWithEmailAndPassword(this.signupForm.email, this.signupForm.password).then(user => {
 	                    
 	                    this.$store.commit('setCurrentUser', user)
 	                    // create user obj
-	                    fb.usersCollection.doc(user.uid).set({
+	                    fbconfig.usersCollection.doc(user.uid).set({
 	                        name: this.signupForm.name,
 	                        title: this.signupForm.title
 	                    }).then(() => {
@@ -192,3 +203,21 @@
     
     }
 </script>
+
+
+
+<style>
+
+.btn-primary{
+    color: black;
+    background-color: white;
+    border-color: #000000;
+}
+
+.margin-top{
+    margin-top:10px !important;
+    color: #007bff !important;
+}
+
+</style>
+
