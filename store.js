@@ -5,7 +5,12 @@ import {fbconfig} from './firebaseConfig';
 
 Vue.use(Vuex)
 
-
+fbconfig.auth.onAuthStateChanged(user => {
+    if (user) {
+        store.commit('setCurrentUser', user)
+        store.dispatch('fetchUserProfile')
+    }
+})
 
 export const store = new Vuex.Store({
 
@@ -20,12 +25,12 @@ export const store = new Vuex.Store({
 		clearData({ commit }) {
             commit('setCurrentUser', null)
             commit('setUserProfile', {})
-            commit('setPosts', null)
-            commit('setHiddenPosts', null)
+            // commit('setPosts', null)
+            // commit('setHiddenPosts', null)
         },
 
 	    fetchUserProfile({ commit, state }) {
-	        fb.usersCollection.doc(state.currentUser.uid).get().then(res => {
+	        fbconfig.usersCollection.doc(state.currentUser.uid).get().then(res => {
 	            commit('setUserProfile', res.data())
 	        }).catch(err => {
 	            console.log(err)

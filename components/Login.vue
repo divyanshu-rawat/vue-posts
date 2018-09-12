@@ -3,7 +3,7 @@
     <div id="login">
     	<transition name="fade">
             <div v-if="performingRequest" class="loading">
-                <p>Loading...</p>
+                <img src="../assets/cool_gif.gif" width="360px">
             </div>
         </transition>
 
@@ -25,7 +25,7 @@
                             <input class = "form-control" v-model.trim = "loginForm.password" type="password" placeholder="******" id="password" />
                          </div>
 
-                        <button @click = "login" class="btn btn-primary">Log In</button>
+                        <button @click = "login" class="btn btn-default">Log In</button>
 
                         <div class="margin-top">
                             <div>
@@ -40,47 +40,53 @@
 
                  <!-- Sign-up form -->
 
-                 <form v-if="!showLoginForm && !showForgotPassword" @submit.prevent>
-                    <h1>Get Started</h1>
+                 <form v-if="!showLoginForm && !showForgotPassword" @submit.prevent class="col-lg-4">
+                    <p>Get Started</p>
 
+                <div class="form-group">                     
                     <label for="name">Name</label>
-                    <input v-model.trim="signupForm.name" type="text" placeholder="Savvy Apps" id="name" />
-
+                    <input class = "form-control"  v-model.trim="signupForm.name" type="text" placeholder="Savvy Apps" id="name" />
+                </div>
+                <div class="form-group">
                     <label for="title">Title</label>
-                    <input v-model.trim="signupForm.title" type="text" placeholder="Company" id="title" />
-
+                    <input class = "form-control"  v-model.trim="signupForm.title" type="text" placeholder="Company" id="title" />
+                 </div>
+                <div class="form-group">
                     <label for="email2">Email</label>
-                    <input v-model.trim="signupForm.email" type="text" placeholder="you@email.com" id="email2" />
+                    <input class = "form-control"  v-model.trim="signupForm.email" type="text" placeholder="you@email.com" id="email2" />
+                 </div>
 
+                <div class="form-group">
                     <label for="password2">Password</label>
-                    <input v-model.trim="signupForm.password" type="password" placeholder="min 6 characters" id="password2" />
+                    <input class = "form-control"  v-model.trim="signupForm.password" type="password" placeholder="min 6 characters" id="password2" />
+                 </div>
+                    <button @click="signup" class="btn btn-default">Sign Up</button>
 
-                    <button @click="signup" class="button">Sign Up</button>
-
-                    <div class="extras">
-                        <a @click="toggleForm">Back to login</a>
+                    <div class="margin-top">
+                        <a @click="toggleForm" class="color">Wanna Login?</a>
                     </div>
                 </form>
 
                 <!-- Forgot Password -->
-                  <form v-if="showForgotPassword" @submit.prevent class="password-reset">
+                  <form v-if="showForgotPassword" @submit.prevent class="col-lg-4">
                     <div v-if="!passwordResetSuccess">
-                        <h1>Reset Password</h1>
+                        <p>Reset Password</p>
                         <p>An Email Will Be Sent @Registered Email Address.</p>
 
+                     <div class="form-group">
                         <label for="email3">Email</label>
-                        <input v-model.trim="passwordForm.email" type="text" placeholder="you@email.com" id="email3" />
+                        <input class = "form-control"  v-model.trim="passwordForm.email" type="text" placeholder="you@email.com" id="email3" />
+                    </div>
 
-                        <button @click="resetPassword" class="button">Submit</button>
+                        <button @click="resetPassword" class="btn btn-default" >Submit</button>
 
-                        <div class="extras">
-                            <a @click="togglePasswordReset">Back to login</a>
+                        <div class="margin-top">
+                            <a @click="togglePasswordReset" class="color">Wanna Login?</a>
                         </div>
                     </div>
                     <div v-else>
-                        <h1>Email Sent</h1>
                         <p>Kindly check Your Email</p>
-                        <button @click="togglePasswordReset" class="button">Back to login</button>
+                        <button @click="togglePasswordReset" class="btn btn-default" >Wanna Login?</button>
                     </div>
                 </form>
 
@@ -140,6 +146,9 @@
 			    .then(user => {
 			        this.$store.commit('setCurrentUser', user.user)
 			        this.$store.dispatch('fetchUserProfile')
+                    // this.showLoginForm = false;
+                    
+                    console.log('hey')
 			        this.$router.push('/dashboard')
 			    }).catch(err => {
 			        console.log(err)
@@ -208,14 +217,26 @@
 
 <style>
 
-.btn-primary{
+.btn-default{
     color: black;
-    background-color: white;
-    border-color: #000000;
+    background-color: #f2f2f2;
+    /*border-color: #000000;*/
+    /*border: 1px solid black; */
+    padding: 0.375rem 0.75rem;
+     font-size: 1rem; 
+     line-height: 1.5; 
+    border-radius: 0.25rem;
+}
+
+.btn-default:hover{
+    background-color: #cccccc;
 }
 
 .margin-top{
     margin-top:10px !important;
+}
+.color{
+    cursor: pointer;
     color: #007bff !important;
 }
 
