@@ -26,7 +26,7 @@
          <router-link to="settings" class="nav-link" >Settings</router-link>
       </li>
       <li class="nav-item">
-        <a @click="logout" class="nav-link">logout</a>
+        <a @click="logout" style = "cursor: pointer" class="nav-link">logout</a>
       </li>
 
     </ul>
@@ -64,10 +64,12 @@
 .navbar-light .navbar-nav .active > .nav-link{
     color: #ffffff !important;
     font-weight: bold !important;
+     cursor: pointer;
 }
 .navbar-light .navbar-nav .nav-link {
     color: #b2b2b2 !important;
     font-weight: bold !important;
+     cursor: pointer;
 }
 .navbar-light .navbar-brand {
     color: #ffffff !important;

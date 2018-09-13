@@ -9,6 +9,19 @@ fbconfig.auth.onAuthStateChanged(user => {
     if (user) {
         store.commit('setCurrentUser', user)
         store.dispatch('fetchUserProfile')
+
+         // realtime updates from our posts collection
+        fbconfig.postsCollection.orderBy('createdOn', 'desc').onSnapshot(querySnapshot => {
+            let postsArray = []
+
+            querySnapshot.forEach(doc => {
+                let post = doc.data()
+                post.id = doc.id
+                postsArray.push(post)
+            })
+
+            store.commit('setPosts', postsArray)
+        })
     }
 })
 
