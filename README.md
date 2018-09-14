@@ -1,2 +1,21 @@
-# HackerNewsClone-Vue
-An application that works similarl to that of HackerNews ;) built on top of vue.js and realtime-firebase-database!
+# firebase-vue
+
+## Project setup
+```
+npm install
+```
+
+### Compiles and hot-reloads for development
+```
+npm run serve
+```
+
+### Compiles and minifies for production
+```
+npm run build
+```
+
+### Lints and fixes files
+```
+npm run lint
+```
