@@ -29,7 +29,9 @@
                          <span >Likes: {{ post.likes }}</span>
                        </p>
 
-                        <b-btn v-b-modal.modal1 @click = "openCommentModal(post)" >See Full Post</b-btn>
+                        <b-btn v-b-modal.modal1 @click = "openCommentModal(post)" >Add Comment</b-btn>
+
+                        <div><b-btn v-b-modal.modal2 @click="viewPost(post)" style = "margin-top:5px;">Show Full Post</b-btn></div>
                      </div>
                   </div>
                </div>
@@ -54,17 +56,49 @@
             </div>
         </transition> -->
 
+<!-- Comment Modal Component -->
 			<div>
-			  
+			  <b-modal id="modal1" title="Add Comments"  class="c-modal">
 
-			  <!-- Modal Component -->
-			  <b-modal id="modal1" title="Bootstrap-Vue"  class="c-modal">
-			    <p class="my-4">Hello from modal!</p>
+			     <div class="">
+                    <form @submit.prevent>
+                        <textarea v-model.trim="comment.content" class="form-control" rows="2" id="comment"></textarea>
+                  		<button @click="addComment" :disabled="comment.content == ''" class="btn btn-default">POST</button>
+                    </form>
+                </div>
+
 			  </b-modal>
 			</div>
 
 
 <!-- Post modal -->
+
+			<div >
+			  <b-modal id="modal2" title="Add Comments"  class="c-modal">
+			     <div class="" >
+
+	             	<div class="p-container">
+	                    <div class="post">
+	                        <h5>{{ fullPost.userName }}</h5>
+	                        <span>{{ fullPost.createdOn | formatDate }}</span>
+	                        <p>{{ fullPost.content }}</p>
+	                        <ul>
+	                            <li><a>comments {{ fullPost.comments }}</a></li>
+	                            <li><a>likes {{ fullPost.likes }}</a></li>
+	                        </ul>
+	                    </div>
+	                    <div v-show="postComments.length" class="comments">
+	                        <div v-for="comment in postComments" class="comment">
+	                            <p>{{ comment.userName }}</p>
+	                            <span>{{ comment.createdOn | formatDate }}</span>
+	                            <p>{{ comment.content }}</p>
+	                        </div>
+	                    </div>
+	                </div>
+
+                </div>
+			  </b-modal>
+			</div>
 	
 		<!--  <transition name="fade">
             <div v-if="showPostModal" class="p-modal">
@@ -116,7 +150,10 @@
     			postComments : 0
     		},
 
-    		showCommentModal: false
+    		showCommentModal: false,
+
+    		 fullPost: {},
+             postComments: []
     	}
 
       },
@@ -150,30 +187,44 @@
 		    this.showCommentModal = true
 		    console.log('I am in!')
 		},
-		closeCommentModal() {
-		    this.comment.postId = ''
-		    this.comment.userId = ''
-		    this.comment.content = ''
-		    this.showCommentModal = false
-		},
 	     addComment() {
             let postId = this.comment.postId
             let postComments = this.comment.postComments
 
-            fb.commentsCollection.add({
+            fbconfig.commentsCollection.add({
                 createdOn: new Date(),
                 content: this.comment.content,
                 postId: postId,
                 userId: this.currentUser.uid,
                 userName: this.userProfile.name
             }).then(doc => {
-                fb.postsCollection.doc(postId).update({
+                fbconfig.postsCollection.doc(postId).update({
                     comments: postComments + 1
                 }).then(() => {
-                    this.closeCommentModal()
+
+                    this.comment.postId = ''
+				    this.comment.userId = ''
+				    this.comment.content = ''
+
                 })
             }).catch(err => {
                 console.log(err)
+            })
+        },
+
+        viewPost(post){
+        	 fbconfig.commentsCollection.where('postId', '==', post.id).get().then(docs => {
+                    let commentsArray = []
+                    docs.forEach(doc => {
+                        let comment = doc.data()
+                        comment.id = doc.id
+                        commentsArray.push(comment)
+                    })
+
+                    this.postComments = commentsArray
+                    this.fullPost = post
+                }).catch(err => {
+                    console.log(err)
             })
         }
       }, 
