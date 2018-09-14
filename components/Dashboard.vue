@@ -33,6 +33,9 @@
                         <b-btn v-b-modal.modal1 @click = "openCommentModal(post)" >Add Comment</b-btn>
 
                         <div><b-btn v-b-modal.modal2 @click="viewPost(post)" style = "margin-top:5px;">Show Full Post</b-btn></div>
+
+
+                        <div style = "margin-top:10px;"  @click="likePost(post.id, post.likes)"><v-icon name="heart" scale="2" /></div>
                      </div>
                   </div>
                </div>
@@ -43,21 +46,6 @@
          </div>
       </div>
 
-<!-- Comment modal -->
-    <!--   	   <transition name="fade">
-            <div v-if="showCommentModal" class="c-modal">
-                <div class="c-container">
-                    <a @click="closeCommentModal">X</a>
-                    <p>add a comment</p>
-                    <form @submit.prevent>
-                        <textarea v-model.trim="comment.content"></textarea>
-                        <button @click="addComment" :disabled="comment.content == ''" class="button">add comment</button>
-                    </form>
-                </div>
-            </div>
-        </transition> -->
-
-<!-- Comment Modal Component -->
 			<div>
 			  <b-modal id="modal1" title="Add Comments"  class="c-modal">
 
@@ -123,8 +111,15 @@
     import { fbconfig } from '../firebaseConfig';
     import { mapState } from 'vuex'
     import moment from 'moment'
+    import 'vue-awesome/icons'
+    import Icon from 'vue-awesome/components/Icon'
     
     export default {
+
+
+    components:{
+       'v-icon': Icon
+    },
      data(){
 
     	return{
@@ -215,7 +210,28 @@
                 }).catch(err => {
                     console.log(err)
             })
-        }
+        },
+              likePost(postId, postLikes) {
+                let docId = `${this.currentUser.uid}_${postId}`
+
+                fbconfig.likesCollection.doc(docId).get().then(doc => {
+                    if (doc.exists) { return }
+
+                    fbconfig.likesCollection.doc(docId).set({
+                        postId: postId,
+                        userId: this.currentUser.uid
+                        
+                    }).then(() => {
+                        // update post likes
+                        fbconfig.postsCollection.doc(postId).update({
+                            likes: postLikes + 1
+                        })
+                    })
+                }).catch(err => {
+                    console.log(err)
+                })
+            }
+        
       }, 
 
          filters: {
