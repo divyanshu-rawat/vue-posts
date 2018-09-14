@@ -1,5 +1,5 @@
 
-## HackerNewsClone-Vue
+## HackerNewsClone-Vue (WIP!!)
 An application that works similar to that of HackerNews ;) built on top of vue.js and realtime-firebase-database!
 
 Access Live Application - https://hackernews-4eb03.firebaseapp.com/
