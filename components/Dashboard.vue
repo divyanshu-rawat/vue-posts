@@ -20,11 +20,12 @@
 
             <div v-if="posts.length">
                <div class="row">
-                  <div class="card margin-top col-3" v-for="post in posts">
+                  <div class="card margin-top col-4" v-for="post in posts">
                      <div class="card-body">
                         <h4 class="card-text">{{ post.title}}</h4>
                         <p class="card-text">{{ post.content | trimLength }}</p>
                         <p class="card-text-username">By: {{ post.userName}},
+                         <span>{{ post.createdOn | formatDate }}</span>,
                          <span >Comments: {{ post.comments }}</span>,
                          <span >Likes: {{ post.likes }}</span>
                        </p>
@@ -74,57 +75,45 @@
 <!-- Post modal -->
 
 			<div >
-			  <b-modal id="modal2" title="Add Comments"  class="c-modal">
+			  <b-modal id="modal2" title="Hacker/News"  class="c-modal">
 			     <div class="" >
 
-	             	<div class="p-container">
-	                    <div class="post">
-	                        <h5>{{ fullPost.userName }}</h5>
-	                        <span>{{ fullPost.createdOn | formatDate }}</span>
-	                        <p>{{ fullPost.content }}</p>
-	                        <ul>
-	                            <li><a>comments {{ fullPost.comments }}</a></li>
-	                            <li><a>likes {{ fullPost.likes }}</a></li>
-	                        </ul>
-	                    </div>
-	                    <div v-show="postComments.length" class="comments">
-	                        <div v-for="comment in postComments" class="comment">
-	                            <p>{{ comment.userName }}</p>
-	                            <span>{{ comment.createdOn | formatDate }}</span>
-	                            <p>{{ comment.content }}</p>
+	             	<div class="">
+
+	                         <div class="card">
+			                     <div class="card-body">
+			                        <h4 class="card-text">{{ fullPost.title}}</h4>
+			                        <p class="card-text">{{ fullPost.content}}</p>
+			                        <p class="card-text-username">By: {{ fullPost.userName}},
+			                         <span>{{ fullPost.createdOn | formatDate }}</span>,
+			                         <span >Comments: {{ fullPost.comments }}</span>,
+			                         <span >Likes: {{ fullPost.likes }}</span>
+			                       </p>
+
+                     			</div>
+                     		</div>
+
+	                    <div v-show="postComments.length" >
+	                        <div v-for="comment in postComments" class="cmnt-list">        
+			                     <div class="comments-list">
+				                       <div class="">
+			                           <p class="float-right"><small>{{ comment.createdOn | formatDate }}</small></p>
+			                            <div class="media-body">
+			                                
+			                              <h4 class="media-heading user_name">{{ comment.userName }} </h4>
+			                              {{ comment.content }}
+			                            </div>
+			                        </div>
+		                         </div>
 	                        </div>
 	                    </div>
+
 	                </div>
 
                 </div>
 			  </b-modal>
 			</div>
 	
-		<!--  <transition name="fade">
-            <div v-if="showPostModal" class="p-modal">
-                <div class="p-container">
-                    <a @click="closePostModal" class="close">X</a>
-                    <div class="post">
-                        <h5>{{ fullPost.userName }}</h5>
-                        <span>{{ fullPost.createdOn | formatDate }}</span>
-                        <p>{{ fullPost.content }}</p>
-                        <ul>
-                            <li><a>comments {{ fullPost.comments }}</a></li>
-                            <li><a>likes {{ fullPost.likes }}</a></li>
-                        </ul>
-                    </div>
-                    <div v-show="postComments.length" class="comments">
-                        <div v-for="comment in postComments" class="comment">
-                            <p>{{ comment.userName }}</p>
-                            <span>{{ comment.createdOn | formatDate }}</span>
-                            <p>{{ comment.content }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </transition> -->
-
-<!--  -->
    </div>
    </div>
 </template>
@@ -297,6 +286,20 @@
 }
 .baby{
 	border: 1px solid black;
+}
+
+.user_name{
+    font-size:14px;
+    font-weight: bold;
+}
+.comments-list{
+    border-bottom: 1px solid #0e0e0e;
+    /*border-bottom-style: dashed;*/
+
+}
+
+.cmnt-list{
+	margin-top: 5% !important;
 }
 </style>
 
