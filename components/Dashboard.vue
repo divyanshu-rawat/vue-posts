@@ -1,60 +1,105 @@
-
 <template>
-    <div id="dashboard">
-            <div class="margin">
-                <div class="margin-top">
-                  <h4>Create Post </h4>
+   <div id="dashboard">
+      <div class="margin">
+         <div class="margin-top">
+            <h3>Create Post </h3>
+            <form @submit.prevent>
+               <div class="form-group col-lg-4" >
+                  <label for="comment">Title:</label>
+                  <input v-model:trim = "post.title" class="form-control"></input>
+               </div>
+               <div class="form-group col-lg-4" >
+                  <label for="comment">Content:</label>
+                  <textarea v-model:trim = "post.content" class="form-control" rows="2" id="comment"></textarea>
+                  <button @click = "createPost" :disabled = "post.content == ''" class="btn btn-default">POST</button>
+               </div>
+            </form>
+         </div>
+         <div class="col-lg-12 margin-top">
+            <h3> Content Posted By Users </h3>
 
-                  <form @submit.prevent>
-                    <div class="form-group col-lg-4" >
-					  <label for="comment">Comment:</label>
-					  
-					  <textarea v-model:trim = "post.content" class="form-control" rows="1" id="comment"></textarea>
-					  <button @click = "createPost" :disabled = "post.content == ''" class="btn btn-default">POST</button>
+            <div v-if="posts.length">
+               <div class="row">
+                  <div class="card margin-top col-3" v-for="post in posts">
+                     <div class="card-body">
+                        <h4 class="card-text">{{ post.title}}</h4>
+                        <p class="card-text">{{ post.content | trimLength }}</p>
+                        <p class="card-text-username">By: {{ post.userName}},
+                         <span >Comments: {{ post.comments }}</span>,
+                         <span >Likes: {{ post.likes }}</span>
+                       </p>
 
-					</div>
-				   </form>
-                </div>
-
-        <!--         <div class="col2">
-	                <transition name="fade">
-	                    <div v-if="hiddenPosts.length" @click="showNewPosts" class="hidden-posts">
-	                        <p>
-	                            Click to show <span class="new-posts">{{ hiddenPosts.length }}</span>
-	                            new <span v-if="hiddenPosts.length > 1">posts</span><span v-else>post</span>
-	                        </p>
-	                    </div>
-	                </transition>
-	                <div v-if="posts.length">
-	                    <div v-for="post in posts" class="post">
-	                        <h5>{{ post.userName }}</h5>
-	                        <span>{{ post.createdOn | formatDate }}</span>
-	                        <p>{{ post.content | trimLength }}</p>
-	                        <ul>
-	                            <li><a @click="openCommentModal(post)">comments {{ post.comments }}</a></li>
-	                            <li><a @click="likePost(post.id, post.likes)">likes {{ post.likes }}</a></li>
-	                            <li><a @click="viewPost(post)">view full post</a></li>
-	                        </ul>
-	                    </div>
-	                </div>
-	                <div v-else>
-	                    <p class="no-results">There are currently no posts</p>
-	                </div>
-            </div> -->
-
+                        <b-btn v-b-modal.modal1 @click = "openCommentModal(post)" >See Full Post</b-btn>
+                     </div>
+                  </div>
+               </div>
             </div>
-            <div class="margin">
-                <div>
-                    <p class="no-results">There are currently no posts</p>
+         </div>
+         <div v-if = "posts.length == 0">
+            <p class="no-results">There are currently no posts</p>
+         </div>
+      </div>
+
+<!-- Comment modal -->
+    <!--   	   <transition name="fade">
+            <div v-if="showCommentModal" class="c-modal">
+                <div class="c-container">
+                    <a @click="closeCommentModal">X</a>
+                    <p>add a comment</p>
+                    <form @submit.prevent>
+                        <textarea v-model.trim="comment.content"></textarea>
+                        <button @click="addComment" :disabled="comment.content == ''" class="button">add comment</button>
+                    </form>
                 </div>
             </div>
-    </div>
+        </transition> -->
+
+			<div>
+			  
+
+			  <!-- Modal Component -->
+			  <b-modal id="modal1" title="Bootstrap-Vue"  class="c-modal">
+			    <p class="my-4">Hello from modal!</p>
+			  </b-modal>
+			</div>
+
+
+<!-- Post modal -->
+	
+		<!--  <transition name="fade">
+            <div v-if="showPostModal" class="p-modal">
+                <div class="p-container">
+                    <a @click="closePostModal" class="close">X</a>
+                    <div class="post">
+                        <h5>{{ fullPost.userName }}</h5>
+                        <span>{{ fullPost.createdOn | formatDate }}</span>
+                        <p>{{ fullPost.content }}</p>
+                        <ul>
+                            <li><a>comments {{ fullPost.comments }}</a></li>
+                            <li><a>likes {{ fullPost.likes }}</a></li>
+                        </ul>
+                    </div>
+                    <div v-show="postComments.length" class="comments">
+                        <div v-for="comment in postComments" class="comment">
+                            <p>{{ comment.userName }}</p>
+                            <span>{{ comment.createdOn | formatDate }}</span>
+                            <p>{{ comment.content }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </transition> -->
+
+<!--  -->
+   </div>
+   </div>
 </template>
 
 
 <script>
     import { fbconfig } from '../firebaseConfig';
     import { mapState } from 'vuex'
+    import moment from 'moment'
     
     export default {
      data(){
@@ -62,13 +107,22 @@
     	return{
     		post : {
     			content: ''
-    		}
+    		},
+
+    		comment:{
+    			postId: '',
+    			userId: '',
+    			content: '',
+    			postComments : 0
+    		},
+
+    		showCommentModal: false
     	}
 
       },
 
       computed:{
-      		...mapState(['userProfile','currentUser'])
+      		...mapState(['userProfile','currentUser','posts'])
       },
       methods:{
       	createPost(){
@@ -80,33 +134,84 @@
       			userId   : this.currentUser.uid,
       			userName : this.userProfile.name,
       			comments : 0,
-      			likes    : 0
+      			likes    : 0,
+      			title    : this.post.title
 
       		}).then( () =>{
       			this.post.content = ''
       		}).catch( err => {
       			console.log(err);
       		})
-      	}
-      }
+      	},
+      	openCommentModal(post) {
+		    this.comment.postId = post.id
+		    this.comment.userId = post.userId
+		    this.comment.postComments = post.comments
+		    this.showCommentModal = true
+		    console.log('I am in!')
+		},
+		closeCommentModal() {
+		    this.comment.postId = ''
+		    this.comment.userId = ''
+		    this.comment.content = ''
+		    this.showCommentModal = false
+		},
+	     addComment() {
+            let postId = this.comment.postId
+            let postComments = this.comment.postComments
 
-  /*    data(){
-      	return{
-      		userProfile: this.$store.state.userProfile
-      	}
-      },
+            fb.commentsCollection.add({
+                createdOn: new Date(),
+                content: this.comment.content,
+                postId: postId,
+                userId: this.currentUser.uid,
+                userName: this.userProfile.name
+            }).then(doc => {
+                fb.postsCollection.doc(postId).update({
+                    comments: postComments + 1
+                }).then(() => {
+                    this.closeCommentModal()
+                })
+            }).catch(err => {
+                console.log(err)
+            })
+        }
+      }, 
 
-      methods:{
-      	set(){
-      		console.log('called');
-      		this.userProfile = this.$store.state.userProfile
-      	}
-      },
+         filters: {
+		    formatDate(val) {
+		        if (!val) { return '-' }
+		        let date = val.toDate()
+		        return moment(date).fromNow()
+		    },
+		    trimLength(val) {
+		        if (val.length < 200) {
+		            return val
+		        }
+
+		        console.log('Postsfilter',this.posts);
+		        return `${val.substring(0, 200)}...`
+		    }
+		},
+
+      // data(){
+      // 	return{
+      // 		userProfile: this.$store.state.userProfile
+      // 	}
+      // },
+
+      // methods:{
+      // 	set(){
+      // 		console.log('called');
+      // 		this.userProfile = this.$store.state.userProfile
+      // 	}
+      // },
       
        updated(){
-	        console.log('userProfile',this.$store.state.userProfile);
-	    	this.set()
-	   } */
+	        console.log('Posts',this.$store.state.posts);
+	        console.log('Posts',this.posts);
+	    	// this.set()
+	   } 
     }
 </script>
 
@@ -114,8 +219,8 @@
 <style type="text/css">
 	
 .btn-default{
-	color: black;
-	background-color: #f2f2f2;
+	color: white;
+	background-color:#6c757d;
 	/*border-color: #000000;*/
 	/*border: 1px solid black; */
 	/*padding: 0.375rem 0.75rem !important;*/
@@ -130,11 +235,17 @@
 }
 
 .margin-top{
-    margin-top:10px !important;
+    margin:10px !important;
+
 }
 .margin{
 	margin: 5px;
 }
-
+.card-text-username{
+	font-size: .8rem;
+}
+.baby{
+	border: 1px solid black;
+}
 </style>
 

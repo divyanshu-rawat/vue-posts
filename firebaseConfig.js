@@ -4,14 +4,15 @@ import firebase from 'firebase'
 import 'firebase/firestore'
 
 // firebase init goes here
-  var config = {
-    apiKey: "AIzaSyDkal3d_DGdh-NO3ulwLjR9Pd5cO8QwAtc",
-    authDomain: "vue-app-7bd15.firebaseapp.com",
-    databaseURL: "https://vue-app-7bd15.firebaseio.com",
-    projectId: "vue-app-7bd15",
+  var config =  {
+    apiKey: "AIzaSyC3wny8yD4geEPnK9-gNrsDdPLmpc5tdGQ",
+    authDomain: "hackern-8c8a9.firebaseapp.com",
+    databaseURL: "https://hackern-8c8a9.firebaseio.com",
+    projectId: "hackern-8c8a9",
     storageBucket: "",
-    messagingSenderId: "2697753342"
+    messagingSenderId: "237804719264"
   };
+
 
 firebase.initializeApp(config)
 

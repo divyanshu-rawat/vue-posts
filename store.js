@@ -5,32 +5,40 @@ import {fbconfig} from './firebaseConfig';
 
 Vue.use(Vuex)
 
+// handle page reload
 fbconfig.auth.onAuthStateChanged(user => {
     if (user) {
+    	console.log('hey',user)
         store.commit('setCurrentUser', user)
         store.dispatch('fetchUserProfile')
 
-         // realtime updates from our posts collection
+        fbconfig.usersCollection.doc(user.uid).onSnapshot(doc => {
+            store.commit('setUserProfile', doc.data())
+        })
+
+        // realtime updates from our posts collection
         fbconfig.postsCollection.orderBy('createdOn', 'desc').onSnapshot(querySnapshot => {
-            let postsArray = []
+               
+               let postsArray = []
+               querySnapshot.forEach(doc => {
+                    let post = doc.data()
+                    post.id = doc.id
+                    postsArray.push(post)
+                })
 
-            querySnapshot.forEach(doc => {
-                let post = doc.data()
-                post.id = doc.id
-                postsArray.push(post)
-            })
-
-            store.commit('setPosts', postsArray)
+                store.commit('setPosts', postsArray)
         })
     }
 })
+
 
 export const store = new Vuex.Store({
 
 	state :{
 
 		currentUser: null,
-		userProfile: {}
+		userProfile: {},
+		posts: []
 
 	},
 	actions :{
@@ -58,6 +66,9 @@ export const store = new Vuex.Store({
 	    },
 	    setUserProfile(state, val) {
 	        state.userProfile = val
+	    },
+	    setPosts(state,val){
+	    	state.posts = val;
 	    }
 
 	}

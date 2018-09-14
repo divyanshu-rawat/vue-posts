@@ -45,20 +45,20 @@
 
                 <div class="form-group">                     
                     <label for="name">Name</label>
-                    <input class = "form-control"  v-model.trim="signupForm.name" type="text" placeholder="Savvy Apps" id="name" />
+                    <input class = "form-control"  v-model.trim="signupForm.name" type="text" placeholder="Name" id="name" required/>
                 </div>
                 <div class="form-group">
                     <label for="title">Title</label>
-                    <input class = "form-control"  v-model.trim="signupForm.title" type="text" placeholder="Company" id="title" />
+                    <input class = "form-control"  v-model.trim="signupForm.title" type="text" placeholder="Title" id="title" required/>
                  </div>
                 <div class="form-group">
                     <label for="email2">Email</label>
-                    <input class = "form-control"  v-model.trim="signupForm.email" type="text" placeholder="you@email.com" id="email2" />
+                    <input class = "form-control"  v-model.trim="signupForm.email" type="text" placeholder="you@email.com" id="email2" required/>
                  </div>
 
                 <div class="form-group">
                     <label for="password2">Password</label>
-                    <input class = "form-control"  v-model.trim="signupForm.password" type="password" placeholder="min 6 characters" id="password2" />
+                    <input class = "form-control"  v-model.trim="signupForm.password" type="password" placeholder="min 6 characters" id="password2" required/>
                  </div>
                     <button @click="signup" class="btn btn-default">Sign Up</button>
 
@@ -190,7 +190,9 @@
 	                    
 	                    this.$store.commit('setCurrentUser', user)
 	                    // create user obj
-	                    fbconfig.usersCollection.doc(user.uid).set({
+
+
+	                    fbconfig.usersCollection.doc(user.user.uid).set({
 	                        name: this.signupForm.name,
 	                        title: this.signupForm.title
 	                    }).then(() => {
