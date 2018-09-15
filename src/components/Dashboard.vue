@@ -35,7 +35,10 @@
                         <div><b-btn v-b-modal.modal2 @click="viewPost(post)" style = "margin-top:5px;">Show Full Post</b-btn></div>
 
 
-                        <div style = "margin-top:10px;"  @click="likePost(post.id, post.likes)"><v-icon name="heart" scale="2" /></div>
+                        <div style = "margin-top:10px;" @click="likePost(post.id, post.likes)">
+                          <v-icon name="heart" scale="2" :class="{'indigo': post.hasBeenLiked}" class = "cursor"/>
+
+                        </div>
                      </div>
                   </div>
                </div>
@@ -156,7 +159,8 @@
       			userName : this.userProfile.name,
       			comments : 0,
       			likes    : 0,
-      			title    : this.post.title
+      			title    : this.post.title,
+            hasBeenLiked: false
 
       		}).then( () =>{
       			this.post.content = ''
@@ -212,19 +216,47 @@
             })
         },
               likePost(postId, postLikes) {
+                console.log('clicked');
                 let docId = `${this.currentUser.uid}_${postId}`
 
                 fbconfig.likesCollection.doc(docId).get().then(doc => {
-                    if (doc.exists) { return }
+                    if (doc.exists) {
+
+                      let bool;
+
+                      let document_ = fbconfig.postsCollection.doc(postId).get().then( (data) =>{
+                        bool = data.data().hasBeenLiked;
+                        bool = !bool;
+
+
+                        console.log('hasBeenLiked',data.data().hasBeenLiked);
+
+                        // console.log('value',bool)
+
+                         postLikes = bool ? postLikes + 1: postLikes - 1
+
+                         fbconfig.postsCollection.doc(postId).update({
+                              likes: postLikes,
+                              hasBeenLiked: bool
+                         })
+
+                      })
+
+                      
+                  
+                     return
+                    }
 
                     fbconfig.likesCollection.doc(docId).set({
                         postId: postId,
                         userId: this.currentUser.uid
+
                         
                     }).then(() => {
                         // update post likes
                         fbconfig.postsCollection.doc(postId).update({
-                            likes: postLikes + 1
+                            likes: postLikes + 1,
+                            hasBeenLiked: true
                         })
                     })
                 }).catch(err => {
@@ -266,6 +298,7 @@
        updated(){
 	        console.log('Posts',this.$store.state.posts);
 	        console.log('Posts',this.posts);
+          console.log('true',this.hasBeenLiked)
 	    	// this.set()
 	   } 
     }
@@ -294,6 +327,17 @@
     margin:10px !important;
 
 }
+
+  .indigo{
+    color: black !important;
+    cursor: pointer;
+  }
+
+.cursor{
+  cursor: pointer;
+  color: grey;
+}
+
 .margin{
 	margin: 5px;
 }
