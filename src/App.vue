@@ -15,10 +15,7 @@ export default {
    computed: {
             ...mapState(['currentUser'])
    },
-   updated(){
-    console.log('!!!!!!!!!!!')
-    console.log('Current User',this.$store.state.currentUser);
-   }
+   updated(){}
   
 }
 </script>

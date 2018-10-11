@@ -3,7 +3,7 @@
 import firebase from 'firebase'
 import 'firebase/firestore'
 
-// firebase init goes here
+firebase init goes here
   var config =  {
     apiKey: "......",
     authDomain: "hackern-8c8a9.firebaseapp.com",
@@ -12,8 +12,6 @@ import 'firebase/firestore'
     storageBucket: "",
     messagingSenderId: "237804719264"
   };
-
-
 firebase.initializeApp(config)
 
 

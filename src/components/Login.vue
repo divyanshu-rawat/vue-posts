@@ -152,6 +152,7 @@
 			        this.$router.push('/dashboard')
 			    }).catch(err => {
 			        console.log(err)
+                    this.errorMsg = 'There is no user record corresponding to this identifier. The user may have been deleted.'
 			    })
 			},
 
@@ -189,8 +190,6 @@
 	                fbconfig.auth.createUserWithEmailAndPassword(this.signupForm.email, this.signupForm.password).then(user => {
 	                    
 	                    this.$store.commit('setCurrentUser', user)
-	                    // create user obj
-
 
 	                    fbconfig.usersCollection.doc(user.user.uid).set({
 	                        name: this.signupForm.name,
@@ -240,6 +239,9 @@
 .color{
     cursor: pointer;
     color: #007bff !important;
+}
+.error-msg{
+    margin: 5px !important;
 }
 
 .loader{

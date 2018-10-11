@@ -8,7 +8,6 @@ Vue.use(Vuex)
 // handle page reload
 fbconfig.auth.onAuthStateChanged(user => {
     if (user) {
-    	console.log('hey',user)
         store.commit('setCurrentUser', user)
         store.dispatch('fetchUserProfile')
 
@@ -46,8 +45,6 @@ export const store = new Vuex.Store({
 		clearData({ commit }) {
             commit('setCurrentUser', null)
             commit('setUserProfile', {})
-            // commit('setPosts', null)
-            // commit('setHiddenPosts', null)
         },
 
 	    fetchUserProfile({ commit, state }) {

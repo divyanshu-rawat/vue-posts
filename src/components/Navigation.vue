@@ -19,7 +19,7 @@
     <ul class="navbar-nav">
 
       <li class="nav-item active">
-         <a class="nav-link" >Logged IN : {{ userProfile.name }}</a>
+         <a class="nav-link" >Welcome: {{ userProfile.name }}</a>
       </li>
 
       <li class="nav-item">
