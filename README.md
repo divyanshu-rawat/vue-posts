@@ -4,6 +4,8 @@ An application that works similar to that of HackerNews ;) built on top of vue.j
 
 Access Live Application - https://hackernews-4eb03.firebaseapp.com/
 
+[![forthebadge](https://forthebadge.com/images/badges/made-with-javascript.svg)](https://forthebadge.com)
+
 ## Instructions To Run:
 
 ``` npm install ```
@@ -11,6 +13,8 @@ Access Live Application - https://hackernews-4eb03.firebaseapp.com/
 ``` cd src ```
 
 ``` vue serve ```
+
+[![forthebadge](https://forthebadge.com/images/badges/made-with-vue.svg)](https://forthebadge.com)
 
 ## App Featues
 
@@ -22,6 +26,8 @@ Access Live Application - https://hackernews-4eb03.firebaseapp.com/
 * Leverage components, one of the more powerful features of Vue.js.
 * Familiarize yourself with core Vue.js concepts.
 
+
+[![forthebadge](https://forthebadge.com/images/badges/built-with-love.svg)](https://forthebadge.com)
 
 ## Setting Up a Database With Firebase Cloud Firestore
 
