@@ -1,5 +1,9 @@
 
 ## HackerNewsClone-Vue (WIP!!)
+
+![Alt Text](https://github.com/divyanshu-rawat/HackerNewsClone-Vue/blob/master/Assets/HN.gif)
+
+
 An application that works similar to that of HackerNews ;) built on top of vue.js and realtime-firebase-database!
 
 Access Live Application - https://hackernews-4eb03.firebaseapp.com/
@@ -57,6 +61,3 @@ service cloud.firestore {
 }
 
 ```
-
-
-![Alt Text](https://github.com/divyanshu-rawat/HackerNewsClone-Vue/blob/master/Assets/HN.gif)
